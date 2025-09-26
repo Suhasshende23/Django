@@ -48,3 +48,25 @@ def vote(request, question_id):
         # with POST data. This prevents data from being posted twice if a
         # user hits the Back button.
         return HttpResponseRedirect(reverse("poll:results", args=(question.id,)))
+
+
+
+
+class IndexView(ListView):
+    template_name = "polls/index.html"
+    context_object_name = "latest_poll"
+
+    def get_queryset(self):
+        """Return the last five published questions."""
+        return Questions.objects.order_by("-pub_date")[:5]
+
+
+class QDetailView(DetailView):
+    model = Questions
+    template_name = "polls/detail.html"
+    context_object_name = "question"
+
+class ResultsView(DetailView):
+    model = Questions
+    template_name = "polls/results.html"
+    context_object_name = "question"
